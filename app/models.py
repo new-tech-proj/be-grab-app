@@ -7,6 +7,10 @@ from sqlalchemy.types import Integer, String, DateTime, Boolean, ARRAY
 from app.database import Base
 from passlib.context import CryptContext
 
+from typing import Union
+
+from pydantic import BaseModel, EmailStr
+
 
 class User(Base):
     __tablename__ = "users"
@@ -98,3 +102,23 @@ class Post(Base):
             self.last_modified_date,
             self.status
         )
+
+class Item(BaseModel):
+    name: str
+    description: str
+    price: float
+    tax: float
+
+class Response(BaseModel):
+    status_code: str
+    status_msg: str
+    data: str
+    
+class Request(BaseModel):
+    email: EmailStr
+    password: str
+    phone_number: str
+    address: str
+    
+# class SignUP()
+
