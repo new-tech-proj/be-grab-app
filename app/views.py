@@ -21,7 +21,6 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     
     if user is not None:
         if verify_password(password, user.hashed_password):
-            print(user.id)
             return make_respones(
                 status_code=0,
                 message="Login successful",
@@ -29,11 +28,19 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
                     "user_id": user.id
                 }
             )
-        else:
-            return make_respones(
-                message="Wrong username or password"
-            )
     else:
+        return make_respones(message="Wrong username or password")
+
+
+@app.get("/user/posts")
+def get_post_by_user(user_id: int):
+    author_id = user_id
+    posts = session.query(Post).filter(Post.author_id == author_id).all()
+    if posts != []:
         return make_respones(
-            message="Wrong username or password"
+            status_code=0,
+            message=f"Get all posts of user {author_id} successful",
+            data=posts
         )
+    
+    return make_respones(message=f"Failure to get all posts of user {author_id}")
