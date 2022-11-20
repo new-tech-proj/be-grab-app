@@ -82,7 +82,7 @@ class Post(Base):
         self.status = status
 
     def __repr__(self):
-        return "Post<(user_id='%s', title='%s', desc='%s', images='%s', created_date='%s', last_modified_date='%s', status='%s')>" % (
+        return "Post<(author_id='%s', title='%s', desc='%s', images='%s', created_date='%s', last_modified_date='%s', status='%s')>" % (
             self.author_id,
             self.title,
             self.desc,
