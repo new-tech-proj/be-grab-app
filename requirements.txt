@@ -3,3 +3,4 @@ uvicorn==0.19.0
 psycopg2==2.9.5
 SQLAlchemy==1.4.42
 passlib==1.7.4
+bcrypt==4.0.1
