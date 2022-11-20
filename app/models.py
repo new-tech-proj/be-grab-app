@@ -3,22 +3,19 @@ from datetime import datetime
 
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Integer, String, DateTime, Boolean, ARRAY
+from sqlalchemy.sql import func
 
 from app.database import Base
-
-from typing import Union
-
-from pydantic import BaseModel, EmailStr
 
 
 class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, autoincrement="auto", primary_key=True, nullable=False)
-    username = Column(String(32), nullable=False, unique=True)
+    username = Column(String(100), nullable=False, unique=True)
     hashed_password = Column(String(128), nullable=False, unique=True)
-    created_date = Column(DateTime, default=datetime.now())
-    full_name = Column(String(64))
+    created_date = Column(DateTime, server_default=func.now())
+    full_name = Column(String(100))
     address = Column(String(128))
     phone_number = Column(String(12))
     gender = Column(Boolean, default=False)
@@ -62,8 +59,8 @@ class Post(Base):
     title = Column(String(128), nullable=False)
     desc = Column(String(4096), nullable=False)
     images = Column(ARRAY(String))
-    created_date = Column(DateTime, default=datetime.now())
-    last_modified_date = Column(DateTime, onupdate=datetime.now())
+    created_date = Column(DateTime, server_default=func.now())
+    last_modified_date = Column(DateTime, server_default=func.now())
     status = Column(Boolean, default=False)
 
     def __init__(
@@ -86,7 +83,7 @@ class Post(Base):
 
     def __repr__(self):
         return "Post<(user_id='%s', title='%s', desc='%s', images='%s', created_date='%s', last_modified_date='%s', status='%s')>" % (
-            self.user_id,
+            self.author_id,
             self.title,
             self.desc,
             self.images,
@@ -94,23 +91,4 @@ class Post(Base):
             self.last_modified_date,
             self.status
         )
-
-class Item(BaseModel):
-    name: str
-    description: str
-    price: float
-    tax: float
-
-class Response(BaseModel):
-    status_code: str
-    status_msg: str
-    data: str
-    
-class Request(BaseModel):
-    email: EmailStr
-    password: str
-    phone_number: str
-    address: str
-    
-# class SignUP()
 
