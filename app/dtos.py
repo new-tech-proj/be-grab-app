@@ -9,3 +9,16 @@ class dtoUser(BaseModel):
     phone_number: str
     created_date: datetime
     gender: bool
+
+class dtoUserLogin(BaseModel):
+    username: str
+    password: str
+
+class dtoPost(BaseModel):
+    author_id: int
+    title: str
+    desc: str
+    images: list[str]
+    created_date: datetime
+    last_modified_date: datetime
+    status: bool

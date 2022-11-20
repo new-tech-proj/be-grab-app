@@ -23,11 +23,3 @@ def is_exists_user(username: str):
     if result:
         return True
     return False
-
-def insert_user(user: dict):
-    user['hashed_password'] = pwd_context.hash(user['hashed_password'])
-    user = User(**user)
-    session.add(user)
-    session.commit()
-    session.close()
-    return "Successful insert user!"
