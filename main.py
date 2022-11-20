@@ -7,7 +7,7 @@ from app import app
 if __name__ == "__main__":
     config = uvicorn.Config(
         app=app,
-        host="127.0.0.1",
+        host="0.0.0.0",
         port=os.getenv("PORT", default=5000),
         log_level="info"
     )
