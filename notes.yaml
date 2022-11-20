@@ -1,0 +1,58 @@
+// login api
+[
+    "request": {
+        "email": "nvatuan@gmaill.com",
+        "password": "asdfasfd",
+        "is_remember": true
+    },
+    "response": {
+        "status_code": 0, // 1 la that bai, 0 la thanh cong,
+        "status_msg": "Sucessfully", // Failure
+        "data": {
+            "user_id": 1,
+            "is_remember": true
+        }
+    }
+]
+
+// sign up
+[
+    "request": {
+        "email": "nvatuan@gmaill.com",
+        "password": "asdfasfd",
+        "sdt": 0000,
+        "dia chi": 12312312,
+        "ten":
+    },
+    "response": {
+        "status_code": 0, // 1 la that bai, 0 la thanh cong,
+        "status_msg": "Sucessfully", // Failure
+        "data": {
+            "user_id": 1,
+            "is_remember": true
+        }
+    }
+]
+
+// api search
+[
+    "request": {
+        "query_key": "máy tính cũ"
+    },
+    "response": {
+        "status_code": 0, // 1 la that bai, 0 la thanh cong,
+        "status_msg": "Sucessfully", // Failure
+        "data": {
+            "posts": [
+                {
+                    "post_id": 2,
+                    "title": "mays tinh hu can ban",
+                    "post_status": "da share",
+                    "post_time": "17-03-2022",
+                    "desc": "ajsdfjaslfdkaf...",
+                    "image_url": "https://asdfhaskfdasfd.com"
+                }
+            ]
+        }
+    }
+]

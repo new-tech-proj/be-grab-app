@@ -2,15 +2,21 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app import app
-from app.models import User, Post
+from fastapi import Response
+
+from app.dtos import dtoUser
+
+from app.models import User
 from app.database import session
-from app.utils import verify_password, make_respones
+from app.utils import verify_password, make_respones, is_exists_user, insert_user
 
-
-@app.get("/")
-def index():
-    return "Hello, world!"
-
+@app.post("/signup")
+def sign_up(user: dtoUser):
+    if is_exists_user(user.username):
+        message = "username already exists!"
+        return make_respones(status_code=0, message=message)
+    message = insert_user(dict(user))
+    return make_respones(status_code=1, message=message)
 
 @app.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends()):

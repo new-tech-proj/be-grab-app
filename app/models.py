@@ -12,10 +12,10 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, autoincrement="auto", primary_key=True, nullable=False)
-    username = Column(String(32), nullable=False, unique=True)
+    username = Column(String(100), nullable=False, unique=True)
     hashed_password = Column(String(128), nullable=False, unique=True)
     created_date = Column(DateTime, server_default=func.now())
-    full_name = Column(String(64))
+    full_name = Column(String(100))
     address = Column(String(128))
     phone_number = Column(String(12))
     gender = Column(Boolean, default=False)
@@ -91,3 +91,4 @@ class Post(Base):
             self.last_modified_date,
             self.status
         )
+
