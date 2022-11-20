@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv(".env")
 
 PGUSER = os.getenv("PGUSER", default="postgres")
 PGPASSWORD = os.getenv("PGPASSWORD", default="Trung2001")
