@@ -9,7 +9,7 @@ def create_database():
     return Base.metadata.create_all(bind=engine)
 
 
-def create_user(session: Session, user: User) -> User:
+def insert_user(session: Session, user: User) -> User:
     try:
         existing_user = session.query(User) \
             .filter(User.username == user.username) \
@@ -17,9 +17,8 @@ def create_user(session: Session, user: User) -> User:
         if not existing_user:
             session.add(user)
             session.commit()
-            print(f"[INFO] Created user: {user}")
         else:
-            print(f"[WARNING] Users already exists in database: {existing_user}")
+            print(f"[WARNING] Users already exists in database: {existing_user.id}")
         return session.query(User).filter(User.username == user.username).first()
 
     except IntegrityError as e:
@@ -31,15 +30,21 @@ def create_user(session: Session, user: User) -> User:
         raise e
 
 
-def create_post(session: Session, post: Post) -> Post:
+def insert_post(session: Session, post: Post) -> Post:
     try:
         existing_post = session.query(Post) \
             .filter(Post.title == post.title and Post.author_id == post.author_id) \
             .first()
-        if not existing_post:
-            session.add(post)
-            session.commit()
-            print(f"[INFO] Created post {post} published by user {post.author.username}")
+        existing_author = session.query(User) \
+            .filter(User.id == post.author_id) \
+            .first()
+
+        if existing_post or existing_author is None:
+            return None
+            
+        session.add(post)
+        session.commit()
+        
         return session.query(Post) \
             .filter(Post.title == post.title and Post.author_id == post.author_id) \
             .first()
