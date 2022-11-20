@@ -5,7 +5,6 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Integer, String, DateTime, Boolean, ARRAY
 
 from app.database import Base
-from passlib.context import CryptContext
 
 from typing import Union
 
@@ -27,28 +26,21 @@ class User(Base):
     def __init__(
         self,
         username: str,
-        password: str,
+        hashed_password: str,
         full_name: str,
         address: str,
         phone_number: str,
         created_date: DateTime = datetime.now(),
         gender: bool = False
     ):
-        self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
         self.username = username
-        self.hashed_password = self.get_hash_password(password)
+        self.hashed_password = hashed_password
         self.created_date = created_date
         self.full_name = full_name
         self.address = address
         self.phone_number = phone_number
         self.gender = gender
-
-    def verify_password(self, plain_password: str):
-        return self.pwd_context.verify(plain_password, self.hashed_password)
-    
-    def get_hash_password(self, password: str):
-        return self.pwd_context.hash(password)
 
     def __repr__(self) -> str:
         return "<User(username='%s', hashed_password='%s', full_name='%s', address='%s', phone_number='%s', created_date='%s', gender='%s')>" % (
