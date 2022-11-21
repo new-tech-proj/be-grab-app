@@ -80,3 +80,18 @@ def create_post(post_data: dtoPost):
         )
     
     return make_respones(message="Error when insert new post")
+
+
+@app.get("/search")
+def search_posts(query: str):
+    data = session.query(Post) \
+        .filter(Post.title.contains(query) | Post.desc.contains(query)) \
+        .all()
+    if data is not None and data != []:
+        return make_respones(
+            status_code=0,
+            message="Get all post by search query successful",
+            data=data
+        )
+    
+    return make_respones(message="No posts match search query")
