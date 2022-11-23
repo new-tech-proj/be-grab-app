@@ -23,3 +23,9 @@ class dtoPost(BaseModel):
     created_date: datetime
     last_modified_date: datetime
     status: bool
+    
+class dtoUpdatePost(BaseModel):
+    title: str
+    desc: str
+    images: List[str]
+    status: bool

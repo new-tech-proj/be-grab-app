@@ -91,4 +91,3 @@ class Post(Base):
             self.last_modified_date,
             self.status
         )
-

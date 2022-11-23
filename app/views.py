@@ -1,10 +1,12 @@
 from app import app
 
-from app.dtos import dtoUser, dtoUserLogin, dtoPost
+from app.dtos import *
 from app.models import User, Post
 from app.database import session
 from app.utils import verify_password, make_respones, is_exists_user, get_hash_password
 from app.services import insert_post, insert_user
+
+from datetime import datetime
 
 @app.get("/")
 def index():
@@ -13,7 +15,56 @@ def index():
         message="Welcome to server of grab application",
         data=dict()
     )
+    
+@app.put("/edit_post")
+def edit_post(post_id: int, new_post: dtoUpdatePost):
+    post = session.query(Post).filter(Post.id == post_id)
+    try:
+        new_post = dict(new_post)
+        new_post['last_modified_date'] = datetime.now()
+        post.update(new_post)
+        session.commit()
+    except Exception as e:
+        raise SystemExit(e)
+    
+    return make_respones(message="Update post successful!")
 
+
+@app.delete("/delete_post")
+def delete_post(post_id: int):
+    post = session.query(Post).filter(Post.id == post_id)
+    if not post:
+        return make_respones(message="Post not found!")
+    post.delete()
+    session.commit()
+    return make_respones(message="Delete post successful!")
+        
+    
+@app.get("/post")
+def get_post_by_id(post_id: int):
+    if type(post_id) != int:
+        return make_respones(
+            status_code=0,
+            message="Invalid data type of post_id!"
+        )
+    
+    query = f"select * from posts where id = {post_id}"
+    post = session.execute(query).fetchall()
+    
+    if not post:
+        return make_respones(
+            status_code=0,
+            message=f"Do not exists {post_id} post!"
+        )
+    else:
+        keys = post[0].keys()
+        data = {k: v for k, v in zip(keys, post[0])}
+        return make_respones(
+                status_code=1,
+                message="Successfully!",
+                data=data
+        )
+        
 @app.post("/signup")
 def sign_up(user_data: dtoUser):
     if is_exists_user(user_data.username):

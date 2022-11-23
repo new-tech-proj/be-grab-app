@@ -1,11 +1,11 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv(".env")
+# load_dotenv(".env")
 
-PGUSER = os.getenv("PGUSER", default="postgres")
-PGPASSWORD = os.getenv("PGPASSWORD", default="Trung2001")
-PGHOST = os.getenv("PGHOST", default="localhost")
-PGPORT = os.getenv("PGPORT", default="5432")
-PGDATABASE = os.getenv("PGDATABASE", default="grab")
-DATABASE_URL = f"postgresql://{PGUSER}:{PGPASSWORD}@{PGHOST}:{PGPORT}/{PGDATABASE}"
+# PGUSER = "Thinh127"
+# PGPASSWORD = "admin"
+# PGHOST = "https://thinh127-jubilant-carnival-4rgp9jq5j6fjrpv-2345.preview.app.github.dev/"
+# PGPORT = "5432"
+# PGDATABASE = "grab_db"
+DATABASE_URL = "postgresql://postgres:MoM8yHXcUPxoAVaSgcv6@containers-us-west-66.railway.app:7208/railway"
