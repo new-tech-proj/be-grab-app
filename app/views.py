@@ -19,14 +19,16 @@ def index():
 @app.put("/edit_post")
 def edit_post(post_id: int, new_post: dtoUpdatePost):
     post = session.query(Post).filter(Post.id == post_id)
-    try:
-        new_post = dict(new_post)
-        new_post['last_modified_date'] = datetime.now()
-        post.update(new_post)
-        session.commit()
-    except Exception as e:
-        raise SystemExit(e)
-    
+    if post.fetchall():
+        try:
+            new_post = dict(new_post)
+            new_post['last_modified_date'] = datetime.now()
+            post.update(new_post)
+            session.commit()
+        except Exception as e:
+            raise SystemExit(e)
+    else:
+        make_respones(message="Post does not exists!")
     return make_respones(message="Update post successful!")
 
 
