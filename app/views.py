@@ -69,8 +69,8 @@ def get_post_by_id(post_id: int):
         
 @app.post("/signup")
 def sign_up(user_data: dtoUser):
-    if is_exists_user(user_data.username):
-        message = "username already exists!"
+    if is_exists_user(user_data.username, user_data.phone_number):
+        message = "username or phone number already exists!"
         return make_respones(status_code=fail_status, message=message)
     
     user_data = dict(user_data)

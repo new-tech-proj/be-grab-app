@@ -17,8 +17,8 @@ def make_respones(status_code: int = 1, message: str = "Failure", data: dict = N
         "data": data
     }
     
-def is_exists_user(username: str):
-    query = f"select * from users where username = '{username}'"
+def is_exists_user(username: str, phone_number: str):
+    query = f"select * from users where username = '{username}' or phone_number = '{phone_number}'"
     result = session.execute(query).fetchall()
     if result:
         return True
