@@ -35,7 +35,7 @@ def edit_post(post_id: int, new_post: dtoUpdatePost):
 @app.delete("/delete_post")
 def delete_post(post_id: int):
     post = session.query(Post).filter(Post.id == post_id)
-    if not post:
+    if not post.fetchall():
         return make_respones(message="Post not found!")
     post.delete()
     session.commit()
