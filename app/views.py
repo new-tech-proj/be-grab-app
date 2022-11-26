@@ -1,5 +1,5 @@
 from app import app
-
+from app import success_status, fail_status
 from app.dtos import *
 from app.models import User, Post
 from app.database import session
@@ -28,25 +28,25 @@ def edit_post(post_id: int, new_post: dtoUpdatePost):
         except Exception as e:
             raise SystemExit(e)
     else:
-        make_respones(message="Post does not exists!")
-    return make_respones(message="Update post successful!")
+        make_respones(status_code=fail_status, message="Post does not exists!")
+    return make_respones(status_code=success_status, message="Update post successful!")
 
 
 @app.delete("/delete_post")
 def delete_post(post_id: int):
     post = session.query(Post).filter(Post.id == post_id)
     if not post.fetchall():
-        return make_respones(message="Post not found!")
+        return make_respones(status_code=fail_status, message="Post not found!")
     post.delete()
     session.commit()
-    return make_respones(message="Delete post successful!")
+    return make_respones(status_code=success_status, message="Delete post successful!")
         
     
 @app.get("/post")
 def get_post_by_id(post_id: int):
     if type(post_id) != int:
         return make_respones(
-            status_code=0,
+            status_code=fail_status,
             message="Invalid data type of post_id!"
         )
     
@@ -55,14 +55,14 @@ def get_post_by_id(post_id: int):
     
     if not post:
         return make_respones(
-            status_code=0,
+            status_code=fail_status,
             message=f"Do not exists {post_id} post!"
         )
     else:
         keys = post[0].keys()
         data = {k: v for k, v in zip(keys, post[0])}
         return make_respones(
-                status_code=1,
+                status_code=success_status,
                 message="Successfully!",
                 data=data
         )
@@ -71,7 +71,7 @@ def get_post_by_id(post_id: int):
 def sign_up(user_data: dtoUser):
     if is_exists_user(user_data.username):
         message = "username already exists!"
-        return make_respones(status_code=0, message=message)
+        return make_respones(status_code=fail_status, message=message)
     
     user_data = dict(user_data)
     user_data['hashed_password'] = get_hash_password(user_data['hashed_password'])
@@ -80,12 +80,12 @@ def sign_up(user_data: dtoUser):
     data = insert_user(session, user)
     if data is not None:
         return make_respones(
-            status_code=0,
+            status_code=success_status,
             message="Created user successful",
             data=data
         )
 
-    return make_respones(message="Error when create new user")
+    return make_respones(status_code=fail_status, message="Error when create new user")
 
 @app.post("/login")
 def login(form_data: dtoUserLogin):
@@ -97,14 +97,14 @@ def login(form_data: dtoUserLogin):
     if user is not None:
         if verify_password(password, user.hashed_password):
             return make_respones(
-                status_code=0,
+                status_code=success_status,
                 message="Login successful",
                 data={
                     "user_id": user.id
                 }
             )
     
-    return make_respones(message="Wrong username or password")
+    return make_respones(status_code=fail_status, message="Wrong username or password")
 
 
 @app.get("/user/posts")
@@ -113,12 +113,12 @@ def get_post_by_user(user_id: int):
     posts = session.query(Post).filter(Post.author_id == author_id).all()
     if posts != []:
         return make_respones(
-            status_code=0,
+            status_code=success_status,
             message=f"Get all posts of user {author_id} successful",
             data=posts
         )
     
-    return make_respones(message=f"Failure to get all posts of user {author_id}")
+    return make_respones(status_code=fail_status, message=f"Failure to get all posts of user {author_id}")
 
 
 @app.post("/user/post")
@@ -127,7 +127,7 @@ def create_post(post_data: dtoPost):
     data = insert_post(session, post)
     if data is not None:
         return make_respones(
-            status_code=0,
+            status_code=success_status,
             message="Created post successful",
             data=data
         )
@@ -142,7 +142,7 @@ def search_posts(query: str):
         .all()
     if data is not None and data != []:
         return make_respones(
-            status_code=0,
+            status_code=success_status,
             message="Get all post by search query successful",
             data=data
         )
