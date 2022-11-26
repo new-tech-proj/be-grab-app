@@ -10,6 +10,12 @@ class dtoUser(BaseModel):
     phone_number: str
     created_date: datetime
     gender: bool
+    
+class dtoUserUpdate(BaseModel):
+    username: str
+    full_name: str
+    address: str
+    gender: bool
 
 class dtoUserLogin(BaseModel):
     username: str

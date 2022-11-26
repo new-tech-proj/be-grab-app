@@ -3,7 +3,7 @@ from app import success_status, fail_status
 from app.dtos import *
 from app.models import User, Post
 from app.database import session
-from app.utils import verify_password, make_respones, is_exists_user, get_hash_password
+from app.utils import verify_password, make_respones, is_exists_user, get_hash_password, sms_auth
 from app.services import insert_post, insert_user
 
 from datetime import datetime
@@ -105,6 +105,39 @@ def login(form_data: dtoUserLogin):
             )
     
     return make_respones(status_code=fail_status, message="Wrong username or password")
+
+@app.get("/get_all_posts")
+def get_all_posts():
+    posts = session.query(Post).all()
+    if posts:
+        return make_respones(status_code=success_status, message="Successfully", data=posts)
+    return make_respones(status_code=fail_status, message="No posts found")
+
+@app.put("/update_user")
+def update_user(old_username: str, user: dtoUserUpdate):
+    user = dict(user)
+    if old_username != user['username']:
+        exist_user = session.query(User).filter(User.username == user['username']).first()
+        if exist_user:
+            return make_respones(status_code=fail_status, message="Username's already in use")
+    query_user = session.query(User).filter(User.username == old_username)
+    query_user.update(user)
+    session.commit()
+    return make_respones(status_code=success_status, message="Update user successful")
+
+@app.post("/forgot_password")
+def forgot_password(phone_number: str, authen_token: int, new_password: str):
+    user = session.query(User).filter(User.phone_number == phone_number)
+    send_token = None
+    if user.first():
+        send_token = sms_auth(phone_number)
+        if send_token == authen_token:
+            user.update({"hashed_password": get_hash_password(new_password)})
+            session.commit()
+            return make_respones(status_code=success_status, message="Update password successful")
+        else:
+            return make_respones(status_code=fail_status, message="Invalid OTP!")
+    return make_respones(status_code=fail_status, message="Phone number not found")    
 
 
 @app.get("/user/posts")

@@ -23,3 +23,21 @@ def is_exists_user(username: str, phone_number: str):
     if result:
         return True
     return False
+
+def sms_auth(phone_number: str):
+    from twilio.rest import Client
+    import random
+    random_token = random.randrange(123456, 987654, 1)
+    account_sid = "AC162565ee2c928192c270d346cbcfd066"
+    auth_token  = "40673c6b3866be65a9959606e4a2cbd3"
+    
+    client = Client(account_sid, auth_token)
+    phone_number = '+84' + phone_number[1:]
+    message = client.messages.create(
+        to=phone_number,
+        from_="+15625739883",
+        body=random_token)
+        # body=str(random_token))
+    message.sid
+    return random_token
+    
