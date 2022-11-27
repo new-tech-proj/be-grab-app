@@ -16,6 +16,13 @@ def index():
         data=dict()
     )
     
+@app.get("/profile")
+def get_profile(user_id: int):  
+    data = session.query(User).filter(User.id == user_id).first()
+    if not data:
+        return make_respones(status_code=fail_status, message="Failure to get profile")
+    return make_respones(status_code=success_status, message="Successfully retrieved profile", data=data)
+    
 @app.put("/edit_post")
 def edit_post(post_id: int, new_post: dtoUpdatePost):
     post = session.query(Post).filter(Post.id == post_id)
